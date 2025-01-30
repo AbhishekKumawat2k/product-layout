@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product List with Carousel Slider</title>
+  <style>
+  
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f7f7f7;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+      color: #333;
+    }
+
+    .layout-options {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .layout-button {
+      background-color: #007BFF;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .layout-button:hover {
+      background-color: #0056b3;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      border-radius: 8px;
+      margin-top: -23px;
+      margin-left: 479px;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #ddd;
+    }
+
+    /* Show dropdown on click */
+    .show-dropdown {
+      display: block;
+    }
+
+    /* Grid Layout */
+    .grid-view {
+      display: grid;
+      gap: 20px;
+      padding: 20px;
+      justify-items: center;
+    }
+
+    /* Dynamic grid layouts */
+    .grid-view.layout-1 {
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+    .grid-view.layout-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-view.layout-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .grid-view.layout-4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .grid-view.layout-5 {
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    .grid-view .product-item {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      text-align: center;
+      transition: transform 0.3s ease-in-out;
+      width: 78%;
+    }
+
+    .grid-view .product-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .grid-view .product-item img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      /* float: left; */
+    }
+
+    /* List Layout */
+    .list-view {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .list-view .product-item {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      padding: 15px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .list-view .product-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .list-view .product-item img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    /* Carousel Slider Layout */
+    .carousel-view {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+
+    .carousel-view .slider-container {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .carousel-view .product-item {
+      flex: 0 0 100%;
+      box-sizing: border-box;
+      padding: 20px;
+      text-align: center;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .carousel-view .product-item img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .carousel-view .slider-controls {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      transform: translateY(-50%);
+    }
+
+    .carousel-view .slider-controls button {
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 50%;
+      transition: background 0.3s ease;
+    }
+
+    .carousel-view .slider-controls button:hover {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    /* Button Styles */
+    .product-item button {
+      background-color: #007BFF;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .product-item button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Product List</h1>
+  <div class="layout-options">
+    <button class="layout-button" onclick="changeLayout('grid')">Grid</button>
+    <button class="layout-button" onclick="changeLayout('list')">List</button>
+    <button class="layout-button" onclick="changeLayout('carousel')">Slider</button>
+  </div>
+  <div class="dropdown">
+    <div class="dropdown-content" id="gridOptions">
+      <a href="#" onclick="setGridColumns(1)">Grid-1</a>
+      <a href="#" onclick="setGridColumns(2)">Grid-2</a>
+      <a href="#" onclick="setGridColumns(3)">Grid-3</a>
+      <a href="#" onclick="setGridColumns(4)">Grid-4</a>
+      <a href="#" onclick="setGridColumns(5)">Grid-5</a>
+    </div>
+  </div>
+  <div class="product-list" id="productList">Loading...</div>
+
+  <script>
+    let currentLayout = 'grid'; // default layout
+    let columns = 4; // default number of columns
+    let currentSlide = 0; // current slide index for carousel
+
+    function changeLayout(layout) {
+      currentLayout = layout;
+      const productList = document.getElementById("productList");
+
+      // Toggle the classes based on layout type
+      if (currentLayout === 'carousel') {
+        productList.innerHTML = `
+          <div class="carousel-view">
+            <div class="slider-container" id="sliderContainer"></div>
+            <div class="slider-controls">
+              <button onclick="prevSlide()">&#10094;</button>
+              <button onclick="nextSlide()">&#10095;</button>
+            </div>
+          </div>
+        `;
+      } else if (currentLayout === 'list') {
+        productList.className = 'list-view';
+      } else {
+        productList.className = 'grid-view';
+        setGridColumns(columns); // apply the default number of columns
+      }
+
+      fetchProducts();
+
+      // Toggle dropdown menu on Grid button click
+      if (layout === 'grid') {
+        document.getElementById('gridOptions').classList.toggle('show-dropdown');
+      } else {
+        document.getElementById('gridOptions').classList.remove('show-dropdown');
+      }
+    }
+
+    function setGridColumns(columnCount) {
+      columns = columnCount;
+      const gridView = document.querySelector('.grid-view');
+
+      // Add/remove layout classes based on column selection
+      gridView.classList.remove('layout-1', 'layout-2', 'layout-3', 'layout-4', 'layout-5');
+      gridView.classList.add(`layout-${columnCount}`);
+    }
+
+    function fetchProducts() {
+      const myHeaders = new Headers();
+      myHeaders.append("Authorization", "bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoiS2x3alVRVVhjeDI5YWFGQkFVZUUiLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjc0ZDQyZDhmZjUwMzI4YTMyZWM1MmI0LW02ZzBuZjhlIiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoiS2x3alVRVVhjeDI5YWFGQkFVZUUiLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbInByb2R1Y3RzLnJlYWRvbmx5IiwicHJvZHVjdHMud3JpdGUiLCJwcm9kdWN0cy9jb2xsZWN0aW9uLnJlYWRvbmx5IiwicHJvZHVjdHMvY29sbGVjdGlvbi53cml0ZSIsInByb2R1Y3RzL2NvbGxlY3Rpb24ud3JpdGUiLCJwcm9kdWN0cy9wcmljZXMucmVhZG9ubHkiLCJwcm9kdWN0cy9wcmljZXMud3JpdGUiXSwiY2xpZW50IjoiNjc0ZDQyZDhmZjUwMzI4YTMyZWM1MmI0IiwiY2xpZW50S2V5IjoiNjc0ZDQyZDhmZjUwMzI4YTMyZWM1MmI0LW02ZzBuZjhlIn0sImlhdCI6MTczODIxNzAzNy4zNTcsImV4cCI6MTczODMwMzQzNy4zNTd9.mIQ6IVFp3h_sfH4YWpHZ2BR2IpEHJ925BDqab3mzhsd5brAz3Wa-kThTFhdKcm3cEhqvSHD48H7sRV53MxUgxLSJfW4M8DcUbfH-nLZRivLCSSdX99s581nB2vFHg3Ip5aAwDOU7SeiB7kpZKFXv5vD_L__HeuYjQfIXPZ4FrLpZyxkesDWLPpLGA0ZUi_loyyBT3AQzUDM9aICXOdLLCwHxd22IN4b6kqboJphCjM548_fDqCG2ZNRQqVpGVwwIJqpIAcTT53dbUwv7shoxH4dAnsiOjzoONKl4k70-S_Vnyc64VFFOw5Hlf0zZPMaAScOWYXsWJEjiEfy2lq7mkHFyjmtfPaClJd-qbdwPqDk4UhMf0Kj9TB_nfZTpUNtYnlgQvxJ2FfbWRBNLxMGLf2V1EJt3rpxtJQKww31LsNVJ7F0z4BMr2kbimnKEoEBxIxavmnQbeXVWTBAVDlkh3Y_n7h-px2AmgZq797OYnyP2VXVK4Y4OHVyS6AtAPg73cTCDieO4y-8a0UVDXQo9hvZ3YG_HaOagcYJCQZfzQ-YAyRyj7T0aYBCmV8zRvJAh7LmjSUoNnKbm6dMTXDfdDcUMhZqO2nZOaVIZM_m-ziSlh8c02mS99K9aXKxzrIT9f7UiiIlGmO5nqn01bjm3vZqcOgUS9GqWrvdFEbmHlUA");
+      myHeaders.append("Content-Type", "application/json");
+      myHeaders.append("version", "2021-07-28");
+
+      const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow"
+      };
+
+      fetch("https://services.leadconnectorhq.com/products/?locationId=KlwjUQUXcx29aaFBAUeE", requestOptions)
+        .then(response => response.json())
+        .then(data => {
+          const productList = document.getElementById("productList");
+          const sliderContainer = document.getElementById("sliderContainer");
+
+          if (data && data.products && data.products.length > 0) {
+            if (currentLayout === 'carousel') {
+              sliderContainer.innerHTML = data.products.map((product, index) => `
+                <div class="product-item" style="display: ${index === 0 ? 'block' : 'none'}">
+                  <img src="${product.image || 'https://via.placeholder.com/300x200'}" alt="${product.name}">
+                  <div>
+                    <h2>${product.name}</h2>
+                    <p><strong>Description:</strong> ${product.description || "No description available"}</p>
+                    <p><strong>Price:</strong> $${product.price || "N/A"}</p>
+                    <button>Add to Cart</button>
+                  </div>
+                </div>
+              `).join('');
+            } else {
+              productList.innerHTML = data.products.map(product => `
+                <div class="product-item">
+                  <img src="${product.image || 'https://via.placeholder.com/300x200'}" alt="${product.name}">
+                  <div>
+                    <h2>${product.name}</h2>
+                    <p><strong>Description:</strong> ${product.description || "No description available"}</p>
+                    <p><strong>Price:</strong> $${product.price || "N/A"}</p>
+                    <button>Add to Cart</button>
+                  </div>
+                </div>
+              `).join('');
+            }
+          } else {
+            productList.innerHTML = "<p>No products found.</p>";
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching data:", error);
+          document.getElementById("productList").innerHTML = "<p>Failed to load products.</p>";
+        });
+    }
+
+    function prevSlide() {
+      const slides = document.querySelectorAll('.carousel-view .product-item');
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      updateSlider();
+    }
+
+    function nextSlide() {
+      const slides = document.querySelectorAll('.carousel-view .product-item');
+      currentSlide = (currentSlide + 1) % slides.length;
+      updateSlider();
+    }
+
+    function updateSlider() {
+      const slides = document.querySelectorAll('.carousel-view .product-item');
+      slides.forEach((slide, index) => {
+        slide.style.display = index === currentSlide ? 'block' : 'none';
+      });
+    }
+
+    // Initial fetch
+    // fetchProducts();
+  </script>
+</body>
+
+</html>
